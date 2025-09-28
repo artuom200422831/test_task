@@ -142,3 +142,17 @@ footer {
   margin-top: 14px;
   color: var(--muted);
 }
+
+.cell {
+  font-family: monospace;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.cell:hover {
+  background: #e0f2fe;
+}
+
+.cell.highlight {
+  background: #fde68a !important;
+}
