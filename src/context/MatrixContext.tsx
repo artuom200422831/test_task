@@ -4,7 +4,7 @@ import { type Cell } from "../types/matrix";
 type MatrixContextType = {
   m: number;
   n: number;
-  x: number; // percentile 0..100
+  x: number;
   setM: (v: number) => void;
   setN: (v: number) => void;
   setX: (v: number) => void;
@@ -14,17 +14,17 @@ type MatrixContextType = {
   incrementCell: (id: number) => void;
   highlightNearest: (id: number, x: number) => void;
 
-  hoveredCellId: number | null;
-  highlightedIds: number[];
-  setHighlightedIds: (ids: number[]) => void;
+  addRow: () => void;
+  removeRow: (index: number) => void;
   hoveredRowIndex: number | null;
   setHoveredRowIndex: (index: number | null) => void;
+  highlightedIds: number[];
+  setHighlightedIds: (ids: number[]) => void;
 };
 
 const MatrixContext = createContext<MatrixContextType | undefined>(undefined);
 
 function randomThreeDigit(): number {
-  // 100..999 inclusive
   return Math.floor(Math.random() * 900) + 100;
 }
 
@@ -33,9 +33,10 @@ export const MatrixProvider = ({ children }: { children: ReactNode }) => {
   const [n, setN] = useState<number>(4);
   const [x, setX] = useState<number>(60);
   const [matrix, setMatrix] = useState<Cell[][]>([]);
-  const [hoveredCellId, setHoveredCellId] = useState<number | null>(null);
   const [highlightedIds, setHighlightedIds] = useState<number[]>([]);
   const [hoveredRowIndex, setHoveredRowIndex] = useState<number | null>(null);
+
+  const [idCounter, setIdCounter] = useState<number>(1);
 
   const generate = (mm?: number, nn?: number) => {
     const rows = mm ?? m;
@@ -44,6 +45,7 @@ export const MatrixProvider = ({ children }: { children: ReactNode }) => {
       setMatrix([]);
       return;
     }
+
     let id = 1;
     const next: Cell[][] = [];
     for (let i = 0; i < rows; i++) {
@@ -53,7 +55,9 @@ export const MatrixProvider = ({ children }: { children: ReactNode }) => {
       }
       next.push(row);
     }
+
     setMatrix(next);
+    setIdCounter(id);
   };
 
   const incrementCell = (id: number) => {
@@ -78,8 +82,42 @@ export const MatrixProvider = ({ children }: { children: ReactNode }) => {
       .slice(0, x)
       .map((c) => c.id);
 
-    setHoveredCellId(id);
     setHighlightedIds(nearest);
+  };
+
+  const addRow = () => {
+    if (n <= 0) return;
+
+    let nextId = idCounter;
+    const newRow: Cell[] = Array.from({ length: n }).map(() => ({
+      id: nextId++,
+      amount: randomThreeDigit(),
+    }));
+
+    setMatrix((prev) => [...prev, newRow]);
+    setM((prev) => prev + 1);
+    setIdCounter(nextId);
+    setHighlightedIds([]);
+  };
+
+  const adjustHoveredRowIndex = (removedIndex: number) => {
+    setHoveredRowIndex((prev) => {
+      if (prev === null) return null;
+      if (prev === removedIndex) return null;
+      if (prev > removedIndex) return prev - 1;
+      return prev;
+    });
+  };
+
+  const removeRow = (index: number) => {
+    setMatrix((prev) => {
+      if (index < 0 || index >= prev.length) return prev;
+      const next = prev.filter((_, i) => i !== index);
+      return next;
+    });
+    setM((prev) => Math.max(0, prev - 1));
+    adjustHoveredRowIndex(index);
+    setHighlightedIds([]);
   };
 
   return (
@@ -95,11 +133,12 @@ export const MatrixProvider = ({ children }: { children: ReactNode }) => {
         generate,
         incrementCell,
         highlightNearest,
-        hoveredCellId,
-        highlightedIds,
-        setHighlightedIds,
+        addRow,
+        removeRow,
         hoveredRowIndex,
         setHoveredRowIndex,
+        highlightedIds,
+        setHighlightedIds,
       }}
     >
       {children}

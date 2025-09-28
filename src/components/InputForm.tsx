@@ -1,20 +1,19 @@
-import React from 'react'
-import { useMatrix } from '../context/MatrixContext'
+import React from "react";
+import { useMatrix } from "../context/MatrixContext";
 
 export default function InputForm() {
-  const { m, n, x, setM, setN, setX, generate } = useMatrix()
+  const { m, n, x, setM, setN, setX, generate, addRow } = useMatrix();
 
   const onGenerate = (e: React.FormEvent) => {
-    e.preventDefault()
-    // clamp values
-    const mm = Math.max(0, Math.min(100, Math.floor(m)))
-    const nn = Math.max(0, Math.min(100, Math.floor(n)))
-    const xx = Math.max(0, Math.min(100, Math.floor(x)))
-    setM(mm)
-    setN(nn)
-    setX(xx)
-    generate(mm, nn)
-  }
+    e.preventDefault();
+    const mm = Math.max(0, Math.min(100, Math.floor(m)));
+    const nn = Math.max(0, Math.min(100, Math.floor(n)));
+    const xx = Math.max(0, Math.min(100, Math.floor(x)));
+    setM(mm);
+    setN(nn);
+    setX(xx);
+    generate(mm, nn);
+  };
 
   return (
     <form className="form" onSubmit={onGenerate}>
@@ -54,7 +53,11 @@ export default function InputForm() {
 
       <div className="form-row actions">
         <button type="submit">Generate matrix</button>
+        <br />
+        <button className="add-row-btn" onClick={addRow}>
+          Add row
+        </button>
       </div>
     </form>
-  )
+  );
 }

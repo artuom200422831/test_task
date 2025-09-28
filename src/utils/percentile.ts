@@ -1,5 +1,4 @@
 export function percentile(values: number[], p: number): number {
-  // p in [0..100]
   if (values.length === 0) return NaN
   const sorted = [...values].sort((a, b) => a - b)
   if (p <= 0) return sorted[0]
