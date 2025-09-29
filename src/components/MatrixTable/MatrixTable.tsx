@@ -56,7 +56,7 @@ export default function MatrixTable() {
       <table className="matrix-table">
         <thead>
           <tr>
-            <th>#</th>
+            <th>Rows</th>
             {Array.from({ length: cols }).map((_, j) => (
               <th key={j}>Col {j + 1}</th>
             ))}
