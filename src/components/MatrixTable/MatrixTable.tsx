@@ -70,7 +70,7 @@ export default function MatrixTable() {
             const maxInRow = Math.max(...row.map((c) => c.amount), 1);
 
             return (
-              <tr key={i}>
+              <tr key={row[0].id}>
                 <td className="row-label">
                   Row {i + 1}
                   <button
