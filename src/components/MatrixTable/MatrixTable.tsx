@@ -1,6 +1,8 @@
 import { useMemo } from "react";
-import { useMatrix } from "../context/MatrixContext";
-import { percentile } from "../utils/percentile";
+import { useMatrix } from "../../context/MatrixContext";
+import { percentile } from "../../utils/percentile";
+import cn from "classnames";
+import "./MatrixTable.css";
 
 export default function MatrixTable() {
   const {
@@ -12,7 +14,6 @@ export default function MatrixTable() {
     setHighlightedIds,
     hoveredRowIndex,
     setHoveredRowIndex,
-    addRow,
     removeRow,
   } = useMatrix();
 
@@ -97,9 +98,11 @@ export default function MatrixTable() {
                       <td
                         key={cell.id}
                         className="cell"
-                        style={{
-                          background: `linear-gradient(to top, rgba(250,180,40,0.35) ${intensity}%, transparent ${intensity}%)`,
-                        }}
+                        style={
+                          {
+                            "--intensity": `${intensity}%`,
+                          } as React.CSSProperties
+                        }
                       >
                         {percentOfTotal}%
                       </td>
@@ -109,9 +112,9 @@ export default function MatrixTable() {
                   return (
                     <td
                       key={cell.id}
-                      className={`cell ${
-                        highlightedIds.includes(cell.id) ? "highlight" : ""
-                      }`}
+                      className={cn("cell", {
+                        highlight: highlightedIds.includes(cell.id),
+                      })}
                       onClick={() => incrementCell(cell.id)}
                       onMouseEnter={() => highlightNearest(cell.id, x)}
                       onMouseLeave={() => setHighlightedIds([])}
@@ -153,15 +156,6 @@ export default function MatrixTable() {
           </tr>
         </tfoot>
       </table>
-
-      <div
-        className="table-actions"
-        style={{ marginTop: 12, textAlign: "right" }}
-      >
-        <button className="add-row-btn" onClick={addRow}>
-          Add row
-        </button>
-      </div>
     </div>
   );
 }

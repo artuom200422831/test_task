@@ -1,5 +1,6 @@
 import React from "react";
-import { useMatrix } from "../context/MatrixContext";
+import { useMatrix } from "../../context/MatrixContext";
+import "./InputForm.css";
 
 export default function InputForm() {
   const { m, n, x, setM, setN, setX, generate, addRow } = useMatrix();

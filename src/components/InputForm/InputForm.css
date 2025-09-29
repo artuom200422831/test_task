@@ -1,0 +1,13 @@
+.add-row-btn {
+  background: rgb(201, 201, 69);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.add-row-btn:hover {
+  background: #1d4ed8;
+}

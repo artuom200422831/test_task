@@ -1,26 +1,6 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
 import { type Cell } from "../types/matrix";
-
-type MatrixContextType = {
-  m: number;
-  n: number;
-  x: number;
-  setM: (v: number) => void;
-  setN: (v: number) => void;
-  setX: (v: number) => void;
-  matrix: Cell[][];
-  generate: (m?: number, n?: number) => void;
-
-  incrementCell: (id: number) => void;
-  highlightNearest: (id: number, x: number) => void;
-
-  addRow: () => void;
-  removeRow: (index: number) => void;
-  hoveredRowIndex: number | null;
-  setHoveredRowIndex: (index: number | null) => void;
-  highlightedIds: number[];
-  setHighlightedIds: (ids: number[]) => void;
-};
+import { type MatrixContextType } from "../types/matrix";
 
 const MatrixContext = createContext<MatrixContextType | undefined>(undefined);
 
@@ -79,7 +59,7 @@ export const MatrixProvider = ({ children }: { children: ReactNode }) => {
       .filter((c) => c.id !== id)
       .map((c) => ({ ...c, diff: Math.abs(c.amount - target.amount) }))
       .sort((a, b) => a.diff - b.diff)
-      .slice(0, x)
+      .slice(0, Math.min(x, allCells.length - 1))
       .map((c) => c.id);
 
     setHighlightedIds(nearest);

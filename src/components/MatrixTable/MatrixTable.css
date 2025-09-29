@@ -1,0 +1,43 @@
+.row-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 500;
+  padding-right: 8px;
+}
+
+.row-remove-btn {
+  margin-left: 8px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.row-remove-btn:hover {
+  background: #dc2626;
+}
+
+.cell {
+  position: relative;
+}
+
+.cell::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to top, rgba(250, 180, 40, 0.35) var(--intensity, 0%), transparent var(--intensity, 0%));
+  pointer-events: none;
+}

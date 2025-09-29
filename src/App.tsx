@@ -1,13 +1,16 @@
-import './App.css'
-import InputForm from './components/InputForm'
-import MatrixTable from './components/MatrixTable'
+import "./App.css";
+import InputForm from "./components/InputForm";
+import MatrixTable from "./components/MatrixTable";
 
 export default function App() {
   return (
     <div className="app">
       <header>
         <h1>Matrix generator — React + TypeScript</h1>
-        <p className="muted">Generate M × N cells (3-digit random numbers). Row sums + Xth percentile per column.</p>
+        <p className="muted">
+          Generate M × N cells (3-digit random numbers). Row sums + Xth
+          percentile per column.
+        </p>
       </header>
 
       <main>
@@ -21,8 +24,11 @@ export default function App() {
       </main>
 
       <footer>
-        <small>Implementation uses React Context, TypeScript and Vite. No Redux or UI libraries.</small>
+        <small>
+          Implementation uses React Context, TypeScript and Vite. No Redux or UI
+          libraries.
+        </small>
       </footer>
     </div>
-  )
+  );
 }

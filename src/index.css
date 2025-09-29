@@ -2,7 +2,7 @@
   --bg: #f7fafc;
   --card: #ffffff;
   --muted: #6b7280;
-  --accent: #2563eb;
+  --accent: rgb(201, 201, 69);
 }
 
 *, *::before, *::after {
@@ -90,6 +90,10 @@ button:active {
   transform: translateY(1px);
 }
 
+button:hover {
+  background: #1d4ed8;
+}
+
 .table-wrap {
   overflow: auto;
   background: var(--card);
@@ -154,5 +158,5 @@ footer {
 }
 
 .cell.highlight {
-  background: #fde68a !important;
+  background: #fde68a;
 }
