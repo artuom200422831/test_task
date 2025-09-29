@@ -55,7 +55,11 @@ export default function InputForm() {
       <div className="form-row actions">
         <button type="submit">Generate matrix</button>
         <br />
-        <button className="add-row-btn" onClick={addRow}>
+        <button
+          type="button"
+          className="add-row-btn"
+          onClick={addRow}
+        >
           Add row
         </button>
       </div>
