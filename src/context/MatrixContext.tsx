@@ -1,12 +1,15 @@
-import { createContext, useContext, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 import { type Cell } from "../types/matrix";
 import { type MatrixContextType } from "../types/matrix";
+import randomThreeDigit from "../utils/randomThreeDigit";
 
 const MatrixContext = createContext<MatrixContextType | undefined>(undefined);
-
-function randomThreeDigit(): number {
-  return Math.floor(Math.random() * 900) + 100;
-}
 
 export const MatrixProvider = ({ children }: { children: ReactNode }) => {
   const [m, setM] = useState<number>(3);
@@ -26,40 +29,49 @@ export const MatrixProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
 
-    let id = 1;
-    const next: Cell[][] = [];
-    for (let i = 0; i < rows; i++) {
-      const row: Cell[] = [];
-      for (let j = 0; j < cols; j++) {
-        row.push({ id: id++, amount: randomThreeDigit() });
-      }
-      next.push(row);
-    }
-
-    setMatrix(next);
-    setIdCounter(id);
+    setIdCounter((prevId) => {
+      let id = prevId;
+      const next: Cell[][] = Array.from({ length: rows }, () =>
+        Array.from({ length: cols }, () => ({
+          id: id++,
+          amount: randomThreeDigit(),
+        }))
+      );
+      setMatrix(next);
+      return id;
+    });
   };
 
   const incrementCell = (id: number) => {
     setMatrix((prev) =>
-      prev.map((row) =>
-        row.map((cell) =>
-          cell.id === id ? { ...cell, amount: cell.amount + 1 } : cell
-        )
-      )
+      prev.map((row) => {
+        const idx = row.findIndex((c) => c.id === id);
+        if (idx === -1) return row;
+        const updated = [...row];
+        updated[idx] = { ...updated[idx], amount: updated[idx].amount + 1 };
+        return updated;
+      })
     );
   };
 
+  const allCells = useMemo(() => matrix.flat(), [matrix]);
+
   const highlightNearest = (id: number, x: number) => {
-    const allCells = matrix.flat();
+    const total = allCells.length;
+
     const target = allCells.find((c) => c.id === id);
     if (!target) return;
 
+    const limit = Math.min(x, total - 1);
+
     const nearest = allCells
       .filter((c) => c.id !== id)
-      .map((c) => ({ ...c, diff: Math.abs(c.amount - target.amount) }))
+      .map((c) => ({
+        ...c,
+        diff: Math.abs(c.amount - target.amount),
+      }))
       .sort((a, b) => a.diff - b.diff)
-      .slice(0, Math.min(x, allCells.length - 1))
+      .slice(0, limit)
       .map((c) => c.id);
 
     setHighlightedIds(nearest);
@@ -69,7 +81,7 @@ export const MatrixProvider = ({ children }: { children: ReactNode }) => {
     if (n <= 0) return;
 
     let nextId = idCounter;
-    const newRow: Cell[] = Array.from({ length: n }).map(() => ({
+    const newRow: Cell[] = Array.from({ length: n }, () => ({
       id: nextId++,
       amount: randomThreeDigit(),
     }));

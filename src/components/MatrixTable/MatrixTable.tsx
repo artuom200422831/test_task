@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useMatrix } from "../../context/MatrixContext";
-import { percentile } from "../../utils/percentile";
+import percentile from "../../utils/percentile";
 import cn from "classnames";
 import "./MatrixTable.css";
 
