@@ -20,9 +20,9 @@ export default function MatrixTable() {
   const rows = matrix.length;
   const cols = matrix[0]?.length ?? 0;
 
-  const { rowSums, rowAvgs, colPercentiles, overallAvg } = useMemo(() => {
+  const { rowSums, rowAvgs, colPercentiles } = useMemo(() => {
     if (rows === 0 || cols === 0) {
-      return { rowSums: [], rowAvgs: [], colPercentiles: [], overallAvg: 0 };
+      return { rowSums: [], rowAvgs: [], colPercentiles: [] };
     }
 
     const rowSums = matrix.map((r) => r.reduce((s, c) => s + c.amount, 0));
@@ -37,10 +37,8 @@ export default function MatrixTable() {
     }
 
     const colPercentiles = colValues.map((vals) => percentile(vals, x));
-    const totalSum = rowSums.reduce((s, v) => s + v, 0);
-    const overallAvg = rows * cols > 0 ? totalSum / (rows * cols) : 0;
 
-    return { rowSums, rowAvgs, colPercentiles, overallAvg };
+    return { rowSums, rowAvgs, colPercentiles };
   }, [matrix, x, rows, cols]);
 
   if (!matrix || matrix.length === 0) {
@@ -145,14 +143,6 @@ export default function MatrixTable() {
             {colPercentiles.map((v, j) => (
               <td key={j}>{Number.isNaN(v) ? "—" : v.toFixed(2)}</td>
             ))}
-
-            <td className="row-avg">{overallAvg.toFixed(2)}</td>
-
-            <td className="row-sum">
-              {colPercentiles
-                .reduce((s, v) => s + (Number.isNaN(v) ? 0 : v), 0)
-                .toFixed(2)}
-            </td>
           </tr>
         </tfoot>
       </table>
